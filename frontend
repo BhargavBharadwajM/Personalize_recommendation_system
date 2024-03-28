@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalize Recommendations</title>
+</head>
+<body>
+    <h1>Personalize Recommendations</h1>
+    <label for="userId">Enter User ID:</label>
+    <input type="text" id="userId" name="userId">
+    <label for="itemId">Enter Item ID:</label>
+    <input type="text" id="itemId" name="itemId">
+    <button onclick="getRecommendations()">Get Recommendations</button>
+    <div id="recommendations"></div>
+
+    <script>
+        function getRecommendations() {
+            var userId = document.getElementById("userId").value;
+            var itemId = document.getElementById("itemId").value;
+            var url = 'YOUR_API_GATEWAY_ENDPOINT?USER_ID=' + userId + '&ITEM_ID=' + itemId;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var recommendations = data.recommended_items;
+                    var recommendationsHtml = "<h2>Recommended Items:</h2><ul>";
+                    recommendations.forEach(item => {
+                        recommendationsHtml += "<li>" + item + "</li>";
+                    });
+                    recommendationsHtml += "</ul>";
+                    document.getElementById("recommendations").innerHTML = recommendationsHtml;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("recommendations").innerHTML = "<p>Error retrieving recommendations. Please try again.</p>";
+                });
+        }
+    </script>
+</body>
+</html>
